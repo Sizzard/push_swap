@@ -6,37 +6,31 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/13 18:46:38 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/15 12:21:39 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../header/push_swap.h"
 
-// trouve le minimun de la liste et renvoie sa position
-int	min_list(t_pile **liste)
+// Renvoie 1 si pas trie 0 sinon
+int	is_sorted(t_pile *stack_a)
 {
 	t_pile	*current;
 	int		ref;
-	int		i;
-	int		res;
 
-	res = 0;
-	ref = INT_MAX;
-	i = 1;
-	current = *liste;
+	current = stack_a;
+	ref = 0;
 	while (current)
 	{
 		if (ref > current->number)
-		{
-			res = i;
-			ref = current->number;
-		}
-		i++;
+			return (1);
+		ref = current->number;
 		current = current->next;
 	}
-	return (res);
+	return (0);
 }
-// trouve le maximum de la liste et renvoie sa position
+
+// Trouve le maximum de la liste et renvoie sa position
 int	max_list(t_pile **liste)
 {
 	t_pile	*current;
@@ -79,7 +73,7 @@ int	len_list(t_pile **liste)
 	return (i);
 }
 
-// trouve le moins couteux a push en fonction du chunk_sizes
+// Trouve le moins couteux a push en fonction du chunk_size et renvoie sa position
 int	pos_nearest(t_pile **liste, int chunk_size)
 {
 	t_pile	*current;
@@ -117,28 +111,52 @@ int	pos_nearest(t_pile **liste, int chunk_size)
 	res2 = len_list(liste) - i;
 	if (res > res2)
 	{
-		if (res2 )
-		return (i + 1);
+		if (res2)
+			return (i + 1);
 	}
 	return (res);
 }
 
-// pretrie dans la stack b puis trie dnas la stack a
+// Push tout dans A dans le bon ordre
+void	sort_big(t_pile **stack_a, t_pile **stack_b)
+{
+	int	max_pos;
+	int	compteur;
+	int	len;
+
+	while (1)
+	{
+		compteur = 0;
+		max_pos = max_list(stack_b) - 1;
+		len = len_list(stack_b);
+		if (len / 2 >= max_pos)
+		{
+			while (compteur++ != max_pos)
+				rb(stack_b, 1);
+		}
+		else if (len / 2 <= max_pos)
+		{
+			while (compteur++ != len - max_pos)
+				rrb(stack_b, 1);
+		}
+		pa(stack_a, stack_b);
+		if (len_list(stack_b) == 0)
+			break ;
+	}
+}
+
+// Push en Chunk dans la B
 void	sort(t_pile **stack_a, t_pile **stack_b)
 {
 	float	compteur;
-	int		min_pos;
+	float	chunk_size;
+	int		chunk_number;
+	float	total_len;
 	int		len;
 	int		pos;
 	int		cost;
-	float	chunk_size;
-	int chunk_number;
-	int		max_pos;
-	float		total_len;
 
-	max_pos = 0;
 	compteur = 1;
-	min_pos = min_list(stack_a) - 1;
 	total_len = len_list(stack_a);
 	if (total_len > 400)
 		chunk_number = 12;
@@ -175,23 +193,53 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 		}
 		chunk_size += total_len / chunk_number;
 	}
-	while (1)
+	sort_big(stack_a, stack_b);
+}
+
+void	sort_three_one(t_pile **stack_a, t_pile **stack_b)
+{
+	pb(stack_a, stack_b);
+	sa(stack_a, 1);
+	pa(stack_a, stack_b);
+}
+
+// Trie une liste de taille 3
+void	sort_three(t_pile **stack_a, t_pile **stack_b)
+{
+	t_pile	*current;
+
+	current = *stack_a;
+	if (current->number == 1)
+		sort_three_one(stack_a, stack_b);
+	else if (current->number == 2)
 	{
-		compteur = 0;
-		max_pos = max_list(stack_b) - 1;
-		len = len_list(stack_b);
-		if (len / 2 >= max_pos)
-		{
-			while (compteur++ != max_pos)
-				rb(stack_b, 1);
-		}
-		else if (len / 2 <= max_pos)
-		{
-			while (compteur++ != len - max_pos)
-				rrb(stack_b, 1);
-		}
-		pa(stack_a, stack_b);
-		if (len_list(stack_b) == 0)
-			break ;
+		current = current->next;
+		if (current->number == 3)
+			rra(stack_a, 1);
+		else
+			sa(stack_a, 1);
 	}
+	else if ((*stack_a)->number == 3)
+	{
+		current = current->next;
+		if (current->number == 1)
+			ra(stack_a, 1);
+		else
+		{
+			ra(stack_a, 1);
+			sa(stack_a, 1);
+		}
+	}
+}
+
+// Trie une liste de taille 5
+
+void	sort_five(t_pile **stack_a, t_pile **stack_b)
+{
+	pb(stack_a, stack_b);
+	pb(stack_a, stack_b);
+	if (is_sorted(*stack_a) == 1)
+		sort_three(stack_a,stack_b);
+	ft_printf("pa\npa\n");
+	(void)stack_b;
 }

@@ -6,11 +6,38 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:07:59 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/13 14:42:46 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/15 15:49:23 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../header/push_swap.h"
+
+int	ft_atoi_check(const char *nptr, long long *nombre)
+{
+	int	i;
+	int	min;
+
+	i = 0;
+	min = 1;
+	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
+		i++;
+	if (nptr[i] == '-')
+	{
+		min = -1;
+		i++;
+	}
+	else if (nptr[i] == '+')
+		i++;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		*nombre = *nombre * 10 + (nptr[i] - 48);
+		if (*nombre * min < INT_MIN || *nombre * min > INT_MAX)
+			return (1);
+		i++;
+	}
+	*nombre *= min;
+	return (0);
+}
 
 int	ft_check_error(char *str)
 {
@@ -44,7 +71,7 @@ int	ft_check_double(t_pile **liste)
 			while (comp)
 			{
 				if (current->number == comp->number)
-					return (1);
+					return (free_list(liste), 1);
 				comp = comp->next;
 			}
 			current = current->next;
@@ -62,62 +89,90 @@ char	*res_split(char **str)
 	char		*line;
 
 	j = 0;
-	i++;
-	line = ft_calloc(11, 1);
-	if (!str[i - 1])
+	if (!str[i])
 		return (NULL);
-	while (str[i - 1][j])
+	line = ft_calloc(ft_strlen(str[i]) + 1, 1);
+	if (!line)
+		return (NULL);
+	while (str[i][j])
 	{
-		line[j] = str[i - 1][j];
+		line[j] = str[i][j];
 		j++;
 	}
+	i++;
 	return (line);
 }
 
 int	ft_parsing2(char **nbs, t_pile **liste)
 {
-	char	*res;
+	char		*res;
+	long long	nombre;
 
 	while (1)
 	{
+		nombre = 0;
 		res = res_split(nbs);
 		if (!res)
 			return (0);
 		if (ft_check_error(res) == 1)
-		{
-			free(res);
-			return (1);
-		}
-		create_list(liste, ft_atoi(res));
+			return (free(res), 1);
+		if (ft_atoi_check(res, &nombre) == 1)
+			return (free(res), 1);
+		create_list(liste, nombre);
 		free(res);
 	}
-	return (0);
+}
+
+void	free_split(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	while (i > 0)
+	{
+		free(str[i - 1]);
+		i--;
+	}
+	free(str);
 }
 
 int	ft_parsing(int argc, char **argv, t_pile **liste)
 {
-	char	**nb;
-	int		i;
+	char		**nb;
+	int			i;
+	long long	nombre;
+	int			j;
 
+	j = 0;
 	i = 1;
 	if (argc == 1)
 		exit(1);
-	nb = ft_split(argv[1], ' ');
 	if (argc == 2)
 	{
-		if (ft_parsing2(nb, liste) == 1)
+		while (argv[1][j] == ' ')
+			j++;
+		if (argv[1][j] == 0)
 			return (1);
+		nb = ft_split(&argv[1][j], ' ');
+		if (!**nb)
+			return (1);
+		if (ft_parsing2(nb, liste) == 1)
+			return (free_split(nb), free_list(liste), 1);
+		free_split(nb);
 	}
 	else
 	{
 		while (i < argc)
 		{
-			if (ft_check_error(argv[i]) == 1)
-				return (1);
-			create_list(liste, ft_atoi(argv[i]));
+			nombre = 0;
+			if (ft_check_error(argv[i]) == 1 || ft_atoi_check(argv[i],
+					&nombre) == 1)
+				return (free_list(liste), 1);
+			create_list(liste, nombre);
 			i++;
 		}
 	}
-	free (nb);
 	return (0);
 }

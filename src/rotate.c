@@ -6,11 +6,11 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 14:51:55 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/13 10:07:01 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/14 12:05:25 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../header/push_swap.h"
 
 // Met premier de A a la fin de A
 void	ra(t_pile **stack_a, int i)

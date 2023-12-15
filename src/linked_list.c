@@ -6,11 +6,11 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:29:04 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/11 17:50:03 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/14 12:04:38 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../header/push_swap.h"
 
 t_pile	*create_node(int number)
 {

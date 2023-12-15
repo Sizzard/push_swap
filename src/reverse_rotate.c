@@ -6,11 +6,11 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 11:54:06 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/13 10:14:14 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/14 15:40:29 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../header/push_swap.h"
 
 // Met dernier de A sur A
 void	rra(t_pile **stack_a, int i)
@@ -59,5 +59,5 @@ void	rrr(t_pile **stack_a, t_pile **stack_b)
 {
 	rra(stack_a, 0);
 	rrb(stack_b, 0);
-	printf("rrr\n");
+	ft_printf("rrr\n");
 }

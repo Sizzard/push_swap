@@ -6,11 +6,11 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:35 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/13 14:39:55 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/15 15:03:42 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "header/push_swap.h"
 
 void	print_list(t_pile *head, char list)
 {
@@ -43,7 +43,16 @@ int	main(int argc, char **argv)
 		write(2, "Error\n", 6);
 		return (1);
 	}
-	sort(&stack_a, &stack_b);
+	assign_rank(&stack_a);
+	if (is_sorted(stack_a) == 1)
+	{
+		if (len_list(&stack_a) == 3)
+			sort_three(&stack_a, &stack_b);
+		else if (len_list(&stack_a) == 5)
+			sort_five(&stack_a, &stack_b);
+		else
+			sort(&stack_a, &stack_b);
+	}
 	free_list(&stack_a);
 	free_list(&stack_b);
 	return (0);

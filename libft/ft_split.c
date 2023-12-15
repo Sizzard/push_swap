@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:34:42 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/06 14:51:22 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/15 13:58:17 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**ft_split2(const char *s, char **str, char c, int *tab)
 		tab[3] = tab[1];
 		str[tab[0]] = malloc(ft_len_word(&s[tab[1]], c) + 1);
 		if (!str[tab[0]])
-			return (ft_error(s, str, c, tab[0]));
+			return (ft_error(s, str, c, tab[0]), NULL);
 		while (tab[2] < ft_len_word(&s[tab[3]], c))
 		{
 			str[tab[0]][tab[2]] = s[tab[3] + tab[2]];
