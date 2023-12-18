@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/15 12:21:39 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/18 14:23:17 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_sorted(t_pile *stack_a)
 	int		ref;
 
 	current = stack_a;
-	ref = 0;
+	ref = INT_MIN;
 	while (current)
 	{
 		if (ref > current->number)
@@ -73,7 +73,8 @@ int	len_list(t_pile **liste)
 	return (i);
 }
 
-// Trouve le moins couteux a push en fonction du chunk_size et renvoie sa position
+// Trouve le moins couteux a push en fonction
+// du chunk_size et renvoie sa position
 int	pos_nearest(t_pile **liste, int chunk_size)
 {
 	t_pile	*current;
@@ -134,7 +135,7 @@ void	sort_big(t_pile **stack_a, t_pile **stack_b)
 			while (compteur++ != max_pos)
 				rb(stack_b, 1);
 		}
-		else if (len / 2 <= max_pos)
+		else if (len / 2 < max_pos)
 		{
 			while (compteur++ != len - max_pos)
 				rrb(stack_b, 1);
@@ -209,20 +210,26 @@ void	sort_three(t_pile **stack_a, t_pile **stack_b)
 	t_pile	*current;
 
 	current = *stack_a;
-	if (current->number == 1)
+	if (current->number < current->next->number
+		&& current->number < current->next->next->number)
 		sort_three_one(stack_a, stack_b);
-	else if (current->number == 2)
+	else if ((current->number > current->next->number
+			&& current->number < current->next->next->number)
+		|| (current->number < current->next->number
+			&& current->number > current->next->next->number))
 	{
 		current = current->next;
-		if (current->number == 3)
+		if (current->number > current->next->number)
 			rra(stack_a, 1);
 		else
 			sa(stack_a, 1);
 	}
-	else if ((*stack_a)->number == 3)
+	else if ((*stack_a)->number > (*stack_a)->next->number
+		&& (*stack_a)->number > current->next->next->number)
 	{
 		current = current->next;
-		if (current->number == 1)
+		if (current->number < current->next->number
+			&& current->number < current->previous->number)
 			ra(stack_a, 1);
 		else
 		{
@@ -236,10 +243,13 @@ void	sort_three(t_pile **stack_a, t_pile **stack_b)
 
 void	sort_five(t_pile **stack_a, t_pile **stack_b)
 {
+	while ((*stack_a)->number != 1 && (*stack_a)->number != 2)
+		ra(stack_a, 1);
 	pb(stack_a, stack_b);
+	while ((*stack_a)->number != 1 && (*stack_a)->number != 2)
+		ra(stack_a, 1);
 	pb(stack_a, stack_b);
 	if (is_sorted(*stack_a) == 1)
-		sort_three(stack_a,stack_b);
-	ft_printf("pa\npa\n");
-	(void)stack_b;
+		sort_three(stack_a, stack_b);
+	sort_big(stack_a, stack_b);
 }
