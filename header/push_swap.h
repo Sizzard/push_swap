@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/15 12:21:20 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:02:01 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,15 @@ typedef struct s_pile
 	struct s_pile	*previous;
 }					t_pile;
 
+typedef struct s_rank
+{
+	int				i;
+	int				res;
+	int				ref;
+	int				rank;
+	t_pile			*current;
+}					t_rank;
+
 int					ft_check_error(char *str);
 char				*res_split(char **str);
 int					ft_parsing(int argc, char **argv, t_pile **pile);
@@ -34,9 +43,12 @@ void				create_list(t_pile **liste, int number);
 int					ft_check_double(t_pile **liste);
 int					len_list(t_pile **liste);
 int					max_list(t_pile **liste);
-void				sort_three(t_pile **stack_a,t_pile **stack_b);
+void				sort_three(t_pile **stack_a, t_pile **stack_b);
 void				sort_five(t_pile **stack_a, t_pile **stack_b);
 int					is_sorted(t_pile *stack_a);
+int					ft_atoi_check(const char *nptr, long long *nombre);
+int					ft_check_error(char *str);
+int					ft_check_double(t_pile **liste);
 
 /*						Instructions :					*/
 /*					1 pour afficher le printf 			*/

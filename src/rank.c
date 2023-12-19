@@ -6,11 +6,40 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:39:27 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/14 13:59:16 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/19 10:50:46 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/push_swap.h"
+
+void	assign_rank2(t_pile **stack_a, int *tab, int len)
+{
+	t_rank	indice;
+
+	indice.rank = 1;
+	while (len--)
+	{
+		indice.i = 0;
+		indice.res = 0;
+		indice.ref = INT_MAX;
+		indice.current = *stack_a;
+		while (indice.current)
+		{
+			if (tab[indice.i] == -1)
+			{
+				if (indice.ref > indice.current->number)
+				{
+					indice.res = indice.i;
+					indice.ref = indice.current->number;
+				}
+			}
+			indice.i++;
+			indice.current = indice.current->next;
+		}
+		tab[indice.res] = indice.rank;
+		indice.rank++;
+	}
+}
 
 // assigne des ranks a la liste chainee et renvoie 1 si malloc echoue
 // et 0 si tout s'est bien passe
@@ -20,12 +49,7 @@ int	assign_rank(t_pile **stack_a)
 	int		i;
 	int		len;
 	t_pile	*current;
-	int		rank;
-	int		res;
-	int		ref;
 
-	rank = 1;
-	current = *stack_a;
 	i = 0;
 	len = len_list(stack_a);
 	tab = malloc(len * sizeof(int));
@@ -36,28 +60,7 @@ int	assign_rank(t_pile **stack_a)
 		tab[i] = -1;
 		i++;
 	}
-	while (len--)
-	{
-		i = 0;
-		res = 0;
-		ref = INT_MAX;
-		current = *stack_a;
-		while (current)
-		{
-			if (tab[i] == -1)
-			{
-				if (ref > current->number)
-				{
-					res = i;
-					ref = current->number;
-				}
-			}
-			i++;
-			current = current->next;
-		}
-		tab[res] = rank;
-		rank++;
-	}
+	assign_rank2(stack_a, tab, len);
 	current = *stack_a;
 	i = 0;
 	while (current)
@@ -66,6 +69,5 @@ int	assign_rank(t_pile **stack_a)
 		current = current->next;
 		i++;
 	}
-	free(tab);
-	return (0);
+	return (free(tab), 0);
 }
