@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/19 11:33:43 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/19 13:48:54 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,133 +40,58 @@ void	sort_big(t_pile **stack_a, t_pile **stack_b)
 	}
 }
 
+void	sort2(t_pile **stack_a, t_pile **stack_b, t_sort sort, int *compteur)
+{
+	while (*compteur <= sort.chunk_size)
+	{
+		sort.pos = pos_nearest(stack_a, sort.chunk_size);
+		if (sort.pos < sort.len / 2)
+		{
+			while (sort.pos - 1)
+			{
+				ra(stack_a, 1);
+				sort.pos--;
+			}
+			pb(stack_a, stack_b);
+		}
+		else
+		{
+			sort.cost = sort.len + 1 - sort.pos;
+			while (sort.cost)
+			{
+				rra(stack_a, 1);
+				sort.cost--;
+			}
+			pb(stack_a, stack_b);
+		}
+		sort.len--;
+		(*compteur)++;
+	}
+}
+
 // Push en Chunk dans la B
 void	sort(t_pile **stack_a, t_pile **stack_b)
 {
-	float	compteur;
-	float	chunk_size;
-	int		chunk_number;
 	float	total_len;
-	int		len;
-	int		pos;
-	int		cost;
+	int		chunk_number;
+	int		compteur;
+	t_sort	sort;
 
 	compteur = 1;
+	sort.cost = 0;
+	sort.len = 0;
+	sort.pos = 0;
 	total_len = len_list(stack_a);
 	if (total_len > 400)
 		chunk_number = 12;
 	else
 		chunk_number = 6;
-	chunk_size = total_len / chunk_number;
+	sort.chunk_size = total_len / chunk_number;
 	while (compteur < total_len)
 	{
-		len = len_list(stack_a);
-		while (compteur <= chunk_size)
-		{
-			pos = pos_nearest(stack_a, chunk_size);
-			if (pos < len / 2)
-			{
-				while (pos - 1)
-				{
-					ra(stack_a, 1);
-					pos--;
-				}
-				pb(stack_a, stack_b);
-			}
-			else
-			{
-				cost = len + 1 - pos;
-				while (cost)
-				{
-					rra(stack_a, 1);
-					cost--;
-				}
-				pb(stack_a, stack_b);
-			}
-			len--;
-			compteur++;
-		}
-		chunk_size += total_len / chunk_number;
+		sort.len = len_list(stack_a);
+		sort2(stack_a, stack_b, sort, &compteur);
+		sort.chunk_size += total_len / chunk_number;
 	}
-	sort_big(stack_a, stack_b);
-}
-
-void	sort_three_one(t_pile **stack_a, t_pile **stack_b)
-{
-	pb(stack_a, stack_b);
-	sa(stack_a, 1);
-	pa(stack_a, stack_b);
-}
-
-// Trie une liste de taille 3
-void	sort_three(t_pile **stack_a, t_pile **stack_b)
-{
-	t_pile	*current;
-
-	current = *stack_a;
-	if (current->number == 1)
-		sort_three_one(stack_a, stack_b);
-	else if (current->number == 2)
-	{
-		current = current->next;
-		if (current->number > current->next->number)
-			rra(stack_a, 1);
-		else
-			sa(stack_a, 1);
-	}
-	else
-	{
-		current = current->next;
-		if (current->number == 1)
-			ra(stack_a, 1);
-		else
-		{
-			ra(stack_a, 1);
-			sa(stack_a, 1);
-		}
-	}
-}
-
-// Trie une liste de taille 3 avec la config d'une lsite de 5
-void	sort_three2(t_pile **stack_a, t_pile **stack_b)
-{
-	t_pile	*current;
-
-	current = *stack_a;
-	if (current->number == 3)
-		sort_three_one(stack_a, stack_b);
-	else if (current->number == 4)
-	{
-		current = current->next;
-		if (current->number > current->next->number)
-			rra(stack_a, 1);
-		else
-			sa(stack_a, 1);
-	}
-	else
-	{
-		current = current->next;
-		if (current->number == 3)
-			ra(stack_a, 1);
-		else
-		{
-			ra(stack_a, 1);
-			sa(stack_a, 1);
-		}
-	}
-}
-
-// Trie une liste de taille 5
-
-void	sort_five(t_pile **stack_a, t_pile **stack_b)
-{
-	while ((*stack_a)->number != 1 && (*stack_a)->number != 2)
-		ra(stack_a, 1);
-	pb(stack_a, stack_b);
-	while ((*stack_a)->number != 1 && (*stack_a)->number != 2)
-		ra(stack_a, 1);
-	pb(stack_a, stack_b);
-	if (is_sorted(*stack_a) == 1)
-		sort_three2(stack_a, stack_b);
 	sort_big(stack_a, stack_b);
 }

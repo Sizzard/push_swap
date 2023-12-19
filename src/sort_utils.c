@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 11:33:46 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/19 11:33:58 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/19 13:25:27 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,47 +73,47 @@ int	len_list(t_pile **liste)
 	return (i);
 }
 
+int	pos_nearest2(t_pile **liste, t_pile *current, t_rank var, int chunk_size)
+{
+	while (var.res == 0)
+	{
+		if (chunk_size >= current->number)
+			var.res = var.i;
+		var.i++;
+		current = current->next;
+	}
+	if (!current)
+		return (var.res);
+	while (current->next)
+		current = current->next;
+	var.i = len_list(liste);
+	while (var.ref == 0)
+	{
+		if (chunk_size >= current->number)
+			var.ref = var.i;
+		var.i--;
+		current = current->previous;
+	}
+	var.ref = len_list(liste) - var.i;
+	if (var.res > var.ref && var.ref)
+		return (var.i + 1);
+	return (var.res);
+}
+
 // Trouve le moins couteux a push en fonction
 // du chunk_size et renvoie sa position
 int	pos_nearest(t_pile **liste, int chunk_size)
 {
-	t_pile *current;
-	int res2;
-	int i;
-	int res;
+	t_pile	*current;
+	t_rank	var;
 
 	if (!*liste)
 		return (0);
 	else if (!(*liste)->next)
 		return (1);
-	res = 0;
-	res2 = 0;
-	i = 1;
+	var.res = 0;
+	var.ref = 0;
+	var.i = 1;
 	current = *liste;
-	while (res == 0)
-	{
-		if (chunk_size >= current->number)
-			res = i;
-		i++;
-		current = current->next;
-	}
-	if (!current)
-		return (res);
-	while (current->next)
-		current = current->next;
-	i = len_list(liste);
-	while (res2 == 0)
-	{
-		if (chunk_size >= current->number)
-			res2 = i;
-		i--;
-		current = current->previous;
-	}
-	res2 = len_list(liste) - i;
-	if (res > res2)
-	{
-		if (res2)
-			return (i + 1);
-	}
-	return (res);
+	return (pos_nearest2(liste, current, var, chunk_size));
 }

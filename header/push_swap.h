@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/19 11:02:01 by facarval         ###   ########.fr       */
+/*   Updated: 2023/12/19 13:49:11 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,15 @@ typedef struct s_rank
 	t_pile			*current;
 }					t_rank;
 
+typedef struct s_sort
+{
+	int				pos;
+	int				cost;
+	int				len;
+	float			compteur;
+	float			chunk_size;
+}					t_sort;
+
 int					ft_check_error(char *str);
 char				*res_split(char **str);
 int					ft_parsing(int argc, char **argv, t_pile **pile);
@@ -44,7 +53,10 @@ int					ft_check_double(t_pile **liste);
 int					len_list(t_pile **liste);
 int					max_list(t_pile **liste);
 void				sort_three(t_pile **stack_a, t_pile **stack_b);
+void				sort_three_one(t_pile **stack_a, t_pile **stack_b);
+void				sort_three5(t_pile **stack_a, t_pile **stack_b);
 void				sort_five(t_pile **stack_a, t_pile **stack_b);
+void				sort_big(t_pile **stack_a, t_pile **stack_b);
 int					is_sorted(t_pile *stack_a);
 int					ft_atoi_check(const char *nptr, long long *nombre);
 int					ft_check_error(char *str);
@@ -67,7 +79,10 @@ void				rrr(t_pile **stack_a, t_pile **stack_b);
 
 void				sort(t_pile **stack_a, t_pile **stack_b);
 int					pos_nearest(t_pile **liste, int chunk);
+int					pos_nearest2(t_pile **liste, t_pile *current, t_rank var,
+						int chunk_size);
 int					assign_rank(t_pile **lst);
+int					len_list(t_pile **liste);
 
 void				free_list(t_pile **stack_a);
 
