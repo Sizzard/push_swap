@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:29:04 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/14 12:04:38 by facarval         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:23:33 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_pile	*create_node(int number)
 {
-	t_pile		*new;
+	t_pile	*new;
 
 	new = (t_pile *)malloc(sizeof(t_pile));
 	if (!new)
@@ -43,7 +43,12 @@ void	add_node(t_pile **head, t_pile *new)
 
 void	create_list(t_pile **liste, int number)
 {
-	add_node(liste, create_node(number));
+	t_pile	*new_node;
+
+	new_node = create_node(number);
+	if (!new_node)
+		return (free_list(liste));
+	add_node(liste, new_node);
 }
 
 void	free_list(t_pile **stack_a)

@@ -6,7 +6,7 @@ SRC = src/linked_list.c src/parsing.c src/push.c src/reverse_rotate.c src/rotate
 NAME = push_swap
 OBJETS = $(SRC:.c=.o)
 
-all: $(NAME) 
+all: $(NAME)
 
 $(NAME): $(OBJETS) libft/libftprintf.a
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJETS) libft/libftprintf.a
@@ -28,4 +28,4 @@ fclean: clean
 re: fclean all
 	make -C libft re
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re 
