@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:07:59 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/19 11:03:04 by facarval         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:05:16 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	ft_parsing3(char **argv, t_pile **liste, char **nb)
 	if (argv[1][j] == 0)
 		return (1);
 	nb = ft_split(&argv[1][j], ' ');
-	if (!**nb)
+	if (!nb)
 		return (1);
 	if (ft_parsing2(nb, liste) == 1)
 		return (free_split(nb), free_list(liste), 1);
@@ -99,7 +99,7 @@ int	ft_parsing(int argc, char **argv, t_pile **liste)
 		exit(1);
 	if (argc == 2 && ft_parsing3(argv, liste, nb) == 1)
 		return (1);
-	else
+	else if (argc != 2)
 	{
 		while (i < argc)
 		{
