@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2023/12/19 13:49:11 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:28:56 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,17 @@
 
 # include "../libft/libftprintf.h"
 # include <limits.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <unistd.h>
 
 typedef struct s_pile
 {
 	int				number;
+	int				closest;
+	int				index;
+	bool			under_median;
+	struct s_pile	*target;
 	struct s_pile	*next;
 	struct s_pile	*previous;
 }					t_pile;
@@ -34,15 +39,6 @@ typedef struct s_rank
 	t_pile			*current;
 }					t_rank;
 
-typedef struct s_sort
-{
-	int				pos;
-	int				cost;
-	int				len;
-	float			compteur;
-	float			chunk_size;
-}					t_sort;
-
 int					ft_check_error(char *str);
 char				*res_split(char **str);
 int					ft_parsing(int argc, char **argv, t_pile **pile);
@@ -52,8 +48,7 @@ void				create_list(t_pile **liste, int number);
 int					ft_check_double(t_pile **liste);
 int					len_list(t_pile **liste);
 int					max_list(t_pile **liste);
-void				sort_three(t_pile **stack_a, t_pile **stack_b);
-void				sort_three_one(t_pile **stack_a, t_pile **stack_b);
+void				sort_three(t_pile **stack_a);
 void				sort_three5(t_pile **stack_a, t_pile **stack_b);
 void				sort_five(t_pile **stack_a, t_pile **stack_b);
 void				sort_big(t_pile **stack_a, t_pile **stack_b);
