@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/09 13:34:17 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:56:48 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,38 +191,230 @@ int	len_list(t_pile **liste)
 	return (i);
 }
 
-t_pile	*get_node(t_pile **stack, int nb)
+t_pile	*get_node(t_pile **stack, int pos)
 {
 	t_pile	*tmp;
+	int		i;
 
+	i = 0;
 	tmp = *stack;
-	while (tmp && tmp->number)
+	while (tmp && pos != i)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (tmp);
+}
+
+int	get_pos(t_pile *stack, int nb)
+{
+	int		res;
+	t_pile	*tmp;
+
+	res = 0;
+	tmp = stack;
+	while (tmp)
 	{
 		if (tmp->number == nb)
-			return (tmp);
+			break ;
+		tmp = tmp->next;
+		res++;
+	}
+	return (res);
+}
+
+int	calculate_rr(t_pile **stack_a, t_pile **stack_b, t_pile *tmp)
+{
+	int	pos;
+	int	pos2;
+
+	pos = get_pos(*stack_a, tmp->number);
+	pos2 = get_pos(*stack_b, tmp->target->number);
+	if (pos > pos2)
+		return (pos);
+	return (pos2);
+}
+
+int	calculate_rrr(t_pile **stack_a, t_pile **stack_b, t_pile *tmp)
+{
+	int	pos;
+	int	pos2;
+
+	pos = len_list(stack_a) - get_pos(*stack_a, tmp->number) + 1;
+	pos2 = len_list(stack_b) - get_pos(*stack_b, tmp->target->number) + 1;
+	if (pos > pos2)
+		return (pos);
+	return (pos2);
+}
+
+int	calculate_ra(t_pile **stack_a, t_pile **stack_b, t_pile *tmp)
+{
+	int	pos;
+	int	pos2;
+
+	pos = get_pos(*stack_a, tmp->number);
+	pos2 = len_list(stack_b) - get_pos(*stack_b, tmp->target->number) + 1;
+	return (pos + pos2);
+}
+
+int	calculate_rb(t_pile **stack_a, t_pile **stack_b, t_pile *tmp)
+{
+	int	pos;
+	int	pos2;
+
+	pos = len_list(stack_a) - get_pos(*stack_a, tmp->number) + 1;
+	pos2 = get_pos(*stack_b, tmp->target->number);
+	return (pos + pos2);
+}
+
+void	find_min_op(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	t_pile		*tmp;
+	t_cost_op	cost_op;
+
+	cost_op.cost = min_op->cost;
+	cost_op.flag_op = 0;
+	cost_op.target_a = NULL;
+	cost_op.target_b = NULL;
+	tmp = *stack_a;
+	while (tmp)
+	{
+		cost_op.cost = calculate_rr(stack_a, stack_b, tmp);
+		if (cost_op.cost < min_op->cost)
+		{
+			min_op->cost = cost_op.cost;
+			min_op->flag_op = RR;
+			min_op->target_a = get_node(stack_a, get_pos(*stack_a,
+						tmp->number));
+			min_op->target_b = get_node(stack_b, get_pos(*stack_b,
+						tmp->target->number));
+		}
+		cost_op.cost = calculate_rrr(stack_a, stack_b, tmp);
+		if (cost_op.cost < min_op->cost)
+		{
+			min_op->cost = cost_op.cost;
+			min_op->flag_op = RRR;
+			min_op->target_a = get_node(stack_a, get_pos(*stack_a,
+						tmp->number));
+			min_op->target_b = get_node(stack_b, get_pos(*stack_b,
+						tmp->target->number));
+		}
+		cost_op.cost = calculate_ra(stack_a, stack_b, tmp);
+		if (cost_op.cost < min_op->cost)
+		{
+			min_op->cost = cost_op.cost;
+			min_op->flag_op = RA;
+			min_op->target_a = get_node(stack_a, get_pos(*stack_a,
+						tmp->number));
+			min_op->target_b = get_node(stack_b, get_pos(*stack_b,
+						tmp->target->number));
+		}
+		cost_op.cost = calculate_rb(stack_a, stack_b, tmp);
+		if (cost_op.cost < min_op->cost)
+		{
+			min_op->cost = cost_op.cost;
+			min_op->flag_op = RB;
+			min_op->target_a = get_node(stack_a, get_pos(*stack_a,
+						tmp->number));
+			min_op->target_b = get_node(stack_b, get_pos(*stack_b,
+						tmp->target->number));
+		}
 		tmp = tmp->next;
 	}
-	return (NULL);
+}
+
+void	do_op_rr(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	while ((*stack_a) != min_op->target_a && (*stack_b) != min_op->target_b)
+	{
+		rr(stack_a, stack_b);
+	}
+	while ((*stack_a) != min_op->target_a)
+	{
+		ra(stack_a, 1);
+	}
+	while ((*stack_b) != min_op->target_b)
+	{
+		rb(stack_b, 1);
+	}
+}
+
+void	do_op_rrr(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	while ((*stack_a) != min_op->target_a && *stack_b != min_op->target_b)
+	{
+		rrr(stack_a, stack_b);
+	}
+	while ((*stack_a) != min_op->target_a)
+	{
+		rra(stack_a, 1);
+	}
+	while (*stack_b != min_op->target_b)
+	{
+		rrb(stack_b, 1);
+	}
+}
+
+void	do_op_ra(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	while (*stack_a != min_op->target_a)
+	{
+		ra(stack_a, 1);
+	}
+	while (*stack_b != min_op->target_b)
+	{
+		rrb(stack_b, 1);
+	}
+}
+
+void	do_op_rb(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	while (*stack_a != min_op->target_a)
+	{
+		rra(stack_a, 1);
+	}
+	while (*stack_b != min_op->target_b)
+	{
+		rb(stack_b, 1);
+	}
+}
+
+void	do_op(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
+{
+	if (min_op->flag_op == RR)
+	{
+		do_op_rr(stack_a, stack_b, min_op);
+	}
+	else if (min_op->flag_op == RRR)
+	{
+		do_op_rrr(stack_a, stack_b, min_op);
+	}
+	else if (min_op->flag_op == RA)
+	{
+		do_op_ra(stack_a, stack_b, min_op);
+	}
+	else if (min_op->flag_op == RB)
+	{
+		do_op_rb(stack_a, stack_b, min_op);
+	}
 }
 
 void	sort(t_pile **stack_a, t_pile **stack_b)
 {
-	t_pile	*tmp;
-	t_pile	*target_a;
-	int		i;
-	int		min_cost;
-	int		min_nb;
-	int		len;
-	bool	median;
+	t_pile		*tmp;
+	t_cost_op	cost_op;
+	int			i;
+	int			len;
 
 	pb(stack_a, stack_b);
 	pb(stack_a, stack_b);
 	len = len_list(stack_a);
 	while (len > 3)
 	{
-		min_cost = INT_MAX;
-		do_median(stack_a);
-		do_median(stack_b);
+		cost_op.cost = INT_MAX;
+		cost_op.flag_op = 0;
+		cost_op.target_a = NULL;
+		cost_op.target_b = NULL;
 		i = 0;
 		tmp = *stack_a;
 		while (tmp)
@@ -234,39 +426,9 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 				i--;
 			tmp = tmp->next;
 		}
-		tmp = *stack_a;
-		while (tmp)
-		{
-			if (tmp->closest < min_cost)
-			{
-				min_nb = tmp->number;
-				min_cost = tmp->closest;
-				median = tmp->under_median;
-			}
-			tmp = tmp->next;
-		}
-		target_a = get_node(stack_a, min_nb);
-		while ((*stack_a) != target_a)
-		{
-			if (target_a->target != *stack_b)
-			{
-				if (!median && target_a->target->under_median == false)
-					rr(stack_a, stack_b);
-				else
-					rrr(stack_a, stack_b);
-			}
-			else if (!median)
-				ra(stack_a, 1);
-			else
-				rra(stack_a, 1);
-		}
-		while ((*stack_a)->target != *stack_b)
-		{
-			if ((*stack_a)->target->under_median == false)
-				rb(stack_b, 1);
-			else
-				rrb(stack_b, 1);
-		}
+		// print_lists(*stack_a, *stack_b);
+		find_min_op(stack_a, stack_b, &cost_op);
+		do_op(stack_a, stack_b, &cost_op);
 		pb(stack_a, stack_b);
 		len--;
 	}

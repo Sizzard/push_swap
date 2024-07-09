@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/09 13:29:58 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:23:25 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,21 @@ typedef struct s_pile
 	struct s_pile	*previous;
 }					t_pile;
 
-typedef struct s_rank
+typedef struct s_cost_op
 {
-	int				i;
-	int				res;
-	int				ref;
-	int				rank;
-	t_pile			*current;
-}					t_rank;
+	int				flag_op;
+	int				cost;
+	t_pile			*target_a;
+	t_pile			*target_b;
+}					t_cost_op;
+
+enum				op
+{
+	RR = 0,
+	RRR = 1,
+	RA = 2,
+	RB = 3,
+};
 
 int					ft_check_error(char *str);
 char				*res_split(char **str);
@@ -46,11 +53,7 @@ void				add_node(t_pile **head, t_pile *new);
 void				create_list(t_pile **liste, int number);
 int					ft_check_double(t_pile **liste);
 int					len_list(t_pile **liste);
-int					max_list(t_pile **liste);
 void				sort_three(t_pile **stack_a);
-void				sort_three5(t_pile **stack_a, t_pile **stack_b);
-void				sort_five(t_pile **stack_a, t_pile **stack_b);
-void				sort_big(t_pile **stack_a, t_pile **stack_b);
 int					is_sorted(t_pile *stack_a);
 int					ft_atoi_check(const char *nptr, long long *nombre);
 int					ft_check_error(char *str);
@@ -72,10 +75,6 @@ void				rrb(t_pile **stack_b, int i);
 void				rrr(t_pile **stack_a, t_pile **stack_b);
 
 void				sort(t_pile **stack_a, t_pile **stack_b);
-int					pos_nearest(t_pile **liste, int chunk);
-int					pos_nearest2(t_pile **liste, t_pile *current, t_rank var,
-						int chunk_size);
-int					assign_rank(t_pile **lst);
 int					len_list(t_pile **liste);
 
 void				free_list(t_pile **stack_a);
