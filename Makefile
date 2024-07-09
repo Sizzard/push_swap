@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g3
-SRC = src/linked_list.c src/parsing.c src/push.c src/reverse_rotate.c src/rotate.c src/sort.c src/swap.c src/rank.c src/error.c \
+SRC = src/linked_list.c src/parsing.c src/push.c src/reverse_rotate.c src/rotate.c src/sort.c src/swap.c src/rank.c src/error.c src/part1.c src/part2.c \
 	main.c
 
 NAME = push_swap

@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/09 14:23:25 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:40:08 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,43 @@ void				rra(t_pile **stack_a, int i);
 void				rrb(t_pile **stack_b, int i);
 void				rrr(t_pile **stack_a, t_pile **stack_b);
 
-void				sort(t_pile **stack_a, t_pile **stack_b);
-int					len_list(t_pile **liste);
+/*						Operations 						*/
 
-void				free_list(t_pile **stack_a);
+void				do_op(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+void				do_op_rb(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+void				do_op_ra(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+void				do_op_rrr(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+void				do_op_rr(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+void				find_min_op(t_pile **stack_a, t_pile **stack_b,
+						t_cost_op *min_op);
+int					calculate_rb(t_pile **stack_a, t_pile **stack_b,
+						t_pile *tmp);
+int					calculate_ra(t_pile **stack_a, t_pile **stack_b,
+						t_pile *tmp);
+int					calculate_rrr(t_pile **stack_a, t_pile **stack_b,
+						t_pile *tmp);
+int					calculate_rr(t_pile **stack_a, t_pile **stack_b,
+						t_pile *tmp);
+void				find_clos_smallest(t_pile **stack_a, t_pile **stack_b);
+void				set_max_target(t_pile **stack_a, t_pile **stack_b);
+int					find_max(t_pile **liste);
+
+void				sort(t_pile **stack_a, t_pile **stack_b);
+void				part2(t_pile **stack_a, t_pile **stack_b);
+int					get_pos(t_pile *stack, int nb);
+
+int					len_list(t_pile **liste);
+t_pile				*get_node(t_pile **stack, int pos);
+
+void				sort_three(t_pile **root_a);
 
 void				print_list(t_pile *head, char list);
+void				print_lists(t_pile *stack_a, t_pile *stack_b);
 
+void				free_list(t_pile **stack_a);
 #endif
