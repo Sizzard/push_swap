@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:44:57 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/08 15:28:56 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:29:58 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ typedef struct s_pile
 {
 	int				number;
 	int				closest;
-	int				index;
 	bool			under_median;
 	struct s_pile	*target;
 	struct s_pile	*next;
