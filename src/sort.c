@@ -6,11 +6,40 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/08 18:03:38 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/09 10:48:15 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/push_swap.h"
+
+void	print_lists(t_pile *stack_a, t_pile *stack_b)
+{
+	t_pile	*tmp_a;
+	t_pile	*tmp_b;
+
+	tmp_a = stack_a;
+	tmp_b = stack_b;
+	ft_printf("         Liste 'a'         |         Liste 'b'         \n\n");
+	while (tmp_a && tmp_b)
+	{
+		ft_printf("         %d                 |         %d         \n",
+			tmp_a->number, tmp_b->number);
+		tmp_a = tmp_a->next;
+		tmp_b = tmp_b->next;
+	}
+	while (tmp_a)
+	{
+		ft_printf("         %d                 |                    \n",
+			tmp_a->number);
+		tmp_a = tmp_a->next;
+	}
+	while (tmp_b)
+	{
+		ft_printf("                           |         %d         \n",
+			tmp_b->number);
+		tmp_b = tmp_b->next;
+	}
+}
 
 // Trouve le maximum de la liste et renvoie sa position
 int	find_max(t_pile **liste)
@@ -58,21 +87,27 @@ int	find_clos_smallest(t_pile **stack_a, t_pile **stack_b)
 {
 	int		i;
 	int		idx;
+	int		last_min;
 	t_pile	*tmp;
 
+	last_min = INT_MAX;
 	idx = 0;
 	i = INT_MAX;
 	tmp = *stack_b;
 	while (tmp)
 	{
-		if ((*stack_a)->number - tmp->number >= 0)
+		// printf("res : %d\n", (*stack_a)->number - tmp->number);
+		if ((*stack_a)->number - tmp->number >= 0
+			&& last_min > (*stack_a)->number - tmp->number)
 		{
+			last_min = (*stack_a)->number - tmp->number;
 			i = idx;
 			(*stack_a)->target = tmp;
 		}
 		idx++;
 		tmp = tmp->next;
 	}
+	// printf("last_min : %d\n", last_min);
 	if (i == INT_MAX)
 	{
 		set_max_target(stack_a, stack_b);
@@ -136,8 +171,8 @@ int	find_clos_biggest(t_pile **stack_a, t_pile **stack_b)
 	{
 		// printf("tmp->number : %d stack_b->number : %d\n", tmp->number,
 		// 	(*stack_b)->number);
-		printf("tmp->number : %d (*stack_b)->number : %d\n", tmp->number,
-			(*stack_b)->number);
+		// printf("tmp->number : %d (*stack_b)->number : %d\n", tmp->number,
+		// 	(*stack_b)->number);
 		if (tmp->number - (*stack_b)->number <= 0)
 		{
 			i = idx;
@@ -148,11 +183,11 @@ int	find_clos_biggest(t_pile **stack_a, t_pile **stack_b)
 	}
 	if (i == INT_MAX)
 	{
-		printf("TEST\n");
+		// printf("TEST\n");
 		set_min_target(stack_a, stack_b);
 		return (find_min(stack_a));
 	}
-	printf("i : %d\n", i);
+	// printf("i : %d\n", i);
 	return (i);
 }
 
@@ -239,12 +274,13 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 	int		min_cost;
 	int		min_nb;
 	bool	median;
-	int		max_nb;
 
+	// int		max_nb;
 	pb(stack_a, stack_b);
 	pb(stack_a, stack_b);
 	while (len_list(stack_a) != 3)
 	{
+		// print_lists(*stack_a, *stack_b);
 		min_cost = INT_MAX;
 		i = 0;
 		tmp = *stack_a;
@@ -252,6 +288,8 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 		{
 			tmp->closest = find_clos_smallest(&tmp, stack_b) + i;
 			i++;
+			// printf("(*stack_a)->target : %d, tmp->target : %d\n",
+			// (*stack_a)->target->number, tmp->target->number);
 			tmp = tmp->next;
 		}
 		do_index(stack_a);
@@ -287,6 +325,8 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 		}
 		while ((*stack_a)->target != *stack_b)
 		{
+			// printf("(*stack_a)->target : %d , \n",
+			// (*stack_a)->target->number);
 			if ((*stack_a)->target->under_median == true)
 				rrb(stack_b, 1);
 			else
@@ -298,74 +338,74 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 	printf("\n");
 	do_index(stack_b);
 	/*******************************************************/
-	while (*stack_b != NULL)
-	{
-		print_list(*stack_a, 'a');
-		print_list(*stack_b, 'b');
-		min_cost = INT_MAX;
-		i = 0;
-		tmp = *stack_b;
-		while (tmp)
-		{
-			tmp->closest = find_clos_biggest(stack_a, &tmp) + i;
-			i++;
-			tmp = tmp->next;
-		}
-		printf("target : %d\n", (*stack_b)->target->number);
-		// tmp = *stack_b;
-		// while (tmp)
-		// {
-		// 	printf("clos : %d\n", tmp->closest);
-		// 	tmp = tmp->next;
-		// }
-		do_index(stack_a);
-		do_index(stack_b);
-		tmp = *stack_b;
-		while (tmp)
-		{
-			// printf("tmp->closest : %d\n", tmp->closest);
-			if (tmp->closest < min_cost)
-			{
-				max_nb = tmp->number;
-				min_cost = tmp->closest;
-				median = tmp->under_median;
-			}
-			tmp = tmp->next;
-		}
-		// printf("max_nb : %d , min_cost : %d, median : %d\n", max_nb,
-		// min_cost, median);
-		while ((*stack_b)->number != max_nb)
-		{
-			if (median)
-				rrb(stack_b, 1);
-			else
-				rb(stack_b, 1);
-		}
-		// printf("(*stack_b)->target : %d, *stack_a : %d\n",
-		// 	(*stack_b)->target->number, (*stack_a)->number);
-		min_cost = INT_MAX;
-		tmp = *stack_a;
-		while (tmp)
-		{
-			if (tmp->closest < min_cost)
-			{
-				min_nb = tmp->number;
-				min_cost = tmp->closest;
-			}
-			tmp = tmp->next;
-		}
-		printf("(*stack_b)->target : %d, *stack_a : %d\n",
-			(*stack_b)->target->number, (*stack_a)->number);
-		while ((*stack_b)->target != *stack_a)
-		{
-			// printf("(*stack_b)->target : %d\n", (*stack_b)->target->number);
-			// printf("(*stack_a)->number : %d\n", (*stack_a)->number);
-			if ((*stack_b)->target->under_median == true)
-				rra(stack_a, 1);
-			else
-				ra(stack_a, 1);
-		}
-		pa(stack_a, stack_b);
-	}
-	print_list(*stack_a, 'a');
+	// while (*stack_b != NULL)
+	// {
+	// 	print_list(*stack_a, 'a');
+	// 	print_list(*stack_b, 'b');
+	// 	min_cost = INT_MAX;
+	// 	i = 0;
+	// 	tmp = *stack_b;
+	// 	while (tmp)
+	// 	{
+	// 		tmp->closest = find_clos_biggest(stack_a, &tmp) + i;
+	// 		i++;
+	// 		tmp = tmp->next;
+	// 	}
+	// 	printf("target : %d\n", (*stack_b)->target->number);
+	// 	// tmp = *stack_b;
+	// 	// while (tmp)
+	// 	// {
+	// 	// 	printf("clos : %d\n", tmp->closest);
+	// 	// 	tmp = tmp->next;
+	// 	// }
+	// 	do_index(stack_a);
+	// 	do_index(stack_b);
+	// 	tmp = *stack_b;
+	// 	while (tmp)
+	// 	{
+	// 		// printf("tmp->closest : %d\n", tmp->closest);
+	// 		if (tmp->closest < min_cost)
+	// 		{
+	// 			max_nb = tmp->number;
+	// 			min_cost = tmp->closest;
+	// 			median = tmp->under_median;
+	// 		}
+	// 		tmp = tmp->next;
+	// 	}
+	// 	// printf("max_nb : %d , min_cost : %d, median : %d\n", max_nb,
+	// 	// min_cost, median);
+	// 	while ((*stack_b)->number != max_nb)
+	// 	{
+	// 		if (median)
+	// 			rrb(stack_b, 1);
+	// 		else
+	// 			rb(stack_b, 1);
+	// 	}
+	// 	// printf("(*stack_b)->target : %d, *stack_a : %d\n",
+	// 	// 	(*stack_b)->target->number, (*stack_a)->number);
+	// 	min_cost = INT_MAX;
+	// 	tmp = *stack_a;
+	// 	while (tmp)
+	// 	{
+	// 		if (tmp->closest < min_cost)
+	// 		{
+	// 			min_nb = tmp->number;
+	// 			min_cost = tmp->closest;
+	// 		}
+	// 		tmp = tmp->next;
+	// 	}
+	// 	printf("(*stack_b)->target : %d, *stack_a : %d\n",
+	// 		(*stack_b)->target->number, (*stack_a)->number);
+	// 	while ((*stack_b)->target != *stack_a)
+	// 	{
+	// 		// printf("(*stack_b)->target : %d\n", (*stack_b)->target->number);
+	// 		// printf("(*stack_a)->number : %d\n", (*stack_a)->number);
+	// 		if ((*stack_b)->target->under_median == true)
+	// 			rra(stack_a, 1);
+	// 		else
+	// 			ra(stack_a, 1);
+	// 	}
+	// 	pa(stack_a, stack_b);
+	// }
+	print_lists(*stack_a, *stack_b);
 }
