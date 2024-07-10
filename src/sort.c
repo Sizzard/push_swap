@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:47 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/09 17:33:59 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:07:29 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,39 +41,30 @@ void	print_lists(t_pile *stack_a, t_pile *stack_b)
 	}
 }
 
-void	sort_three(t_pile **root_a)
+void	sort_three(t_pile **tmp)
 {
-	t_pile	*tmp;
-
-	tmp = *root_a;
-	if (len_list(&tmp) != 3)
+	if (len_list(tmp) != 3)
 		return ;
-	else if (tmp->number > tmp->next->number
-		&& tmp->number < tmp->next->next->number)
+	else if ((*tmp)->number > (*tmp)->next->number
+		&& (*tmp)->number < (*tmp)->next->next->number)
+		sa(tmp, 1);
+	else if ((*tmp)->number < (*tmp)->next->number
+		&& (*tmp)->number > (*tmp)->next->next->number)
+		rra(tmp, 1);
+	else if ((*tmp)->number > (*tmp)->next->number
+		&& (*tmp)->next->number > (*tmp)->next->next->number)
 	{
-		sa(root_a, 1);
+		sa(tmp, 1);
+		rra(tmp, 1);
 	}
-	else if (tmp->number < tmp->next->number
-		&& tmp->number > tmp->next->next->number)
+	else if ((*tmp)->number > (*tmp)->next->number
+		&& (*tmp)->next->number < (*tmp)->next->next->number)
+		ra(tmp, 1);
+	else if ((*tmp)->number < (*tmp)->next->number
+		&& (*tmp)->number < (*tmp)->next->next->number)
 	{
-		rra(root_a, 1);
-	}
-	else if (tmp->number > tmp->next->number
-		&& tmp->next->number > tmp->next->next->number)
-	{
-		sa(root_a, 1);
-		rra(root_a, 1);
-	}
-	else if (tmp->number > tmp->next->number
-		&& tmp->next->number < tmp->next->next->number)
-	{
-		ra(root_a, 1);
-	}
-	else if (tmp->number < tmp->next->number
-		&& tmp->number < tmp->next->next->number)
-	{
-		rra(root_a, 1);
-		sa(root_a, 1);
+		rra(tmp, 1);
+		sa(tmp, 1);
 	}
 }
 

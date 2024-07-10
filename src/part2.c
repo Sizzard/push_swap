@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:33:25 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/09 18:33:11 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:22:35 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,27 +79,7 @@ void	part2(t_pile **stack_a, t_pile **stack_b)
 {
 	int	len;
 
-	// printf("PROUT\n");
-	// t_cost_op	cost_op;
-	len = len_list(stack_a);
-	// while (len >= 3)
-	// {
-	// 	cost_op.cost = INT_MAX;
-	// 	cost_op.flag_op = 0;
-	// 	cost_op.target_a = NULL;
-	// 	cost_op.target_b = NULL;
-	// 	tmp = *stack_b;
-	// 	while (tmp)
-	// 	{
-	// 		find_clos_biggest(stack_a, &tmp);
-	// 		tmp = tmp->next;
-	// 	}
-	// 	print_lists(*stack_a, *stack_b);
-	// 	find_min_op(stack_b, stack_a, &cost_op);
-	// 	do_op(stack_b, stack_a, &cost_op);
-	// 	pa(stack_a, stack_b);
-	// 	len--;
-	// }
+	len = len_list(stack_b);
 	while (*stack_b)
 	{
 		pa(stack_a, stack_b);

@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:29:04 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/08 15:31:23 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:38:01 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ t_pile	*create_node(int number)
 	if (!new)
 		return (NULL);
 	new->number = number;
-	new->closest = INT_MAX;
-	new->under_median = false;
 	new->target = NULL;
 	new->next = NULL;
 	new->previous = NULL;
