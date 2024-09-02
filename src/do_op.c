@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:32:48 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/10 10:33:07 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:20:38 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	do_op_rr(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 	{
 		rr(stack_a, stack_b);
 	}
-	while ((*stack_a) != min_op->target_a)
+	while (*stack_a && (*stack_a) != min_op->target_a)
 	{
 		ra(stack_a, 1);
 	}
@@ -34,11 +34,11 @@ void	do_op_rrr(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 	{
 		rrr(stack_a, stack_b);
 	}
-	while ((*stack_a) != min_op->target_a)
+	while (*stack_a && (*stack_a) != min_op->target_a)
 	{
 		rra(stack_a, 1);
 	}
-	while (*stack_b != min_op->target_b)
+	while (*stack_b && *stack_b != min_op->target_b)
 	{
 		rrb(stack_b, 1);
 	}
@@ -46,11 +46,11 @@ void	do_op_rrr(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 
 void	do_op_ra(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 {
-	while (*stack_a != min_op->target_a)
+	while (*stack_a && *stack_a != min_op->target_a)
 	{
 		ra(stack_a, 1);
 	}
-	while (*stack_b != min_op->target_b)
+	while (*stack_b && *stack_b != min_op->target_b)
 	{
 		rrb(stack_b, 1);
 	}
@@ -58,11 +58,11 @@ void	do_op_ra(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 
 void	do_op_rb(t_pile **stack_a, t_pile **stack_b, t_cost_op *min_op)
 {
-	while (*stack_a != min_op->target_a)
+	while (*stack_a && *stack_a != min_op->target_a)
 	{
 		rra(stack_a, 1);
 	}
-	while (*stack_b != min_op->target_b)
+	while (*stack_b && *stack_b != min_op->target_b)
 	{
 		rb(stack_b, 1);
 	}

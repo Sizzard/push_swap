@@ -6,7 +6,7 @@
 /*   By: facarval <facarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:30:14 by facarval          #+#    #+#             */
-/*   Updated: 2024/07/10 11:33:12 by facarval         ###   ########.fr       */
+/*   Updated: 2024/07/10 14:33:04 by facarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,12 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 {
 	t_pile		*tmp;
 	t_cost_op	cost_op;
+	int			len;
 
 	pb(stack_a, stack_b);
 	pb(stack_a, stack_b);
-	while (*stack_a)
+	len = len_list(stack_a);
+	while (len > 3)
 	{
 		cost_op.cost = INT_MAX;
 		cost_op.tmp = INT_MAX;
@@ -100,6 +102,7 @@ void	sort(t_pile **stack_a, t_pile **stack_b)
 		find_min_op(stack_a, stack_b, &cost_op);
 		do_op(stack_a, stack_b, &cost_op);
 		pb(stack_a, stack_b);
+		len--;
 	}
 	sort_three(stack_a);
 	part2(stack_a, stack_b);
